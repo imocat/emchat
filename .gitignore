@@ -1,3 +1,5 @@
 .gitignore
+.idea
+.idea/*
 node_modules/*
 local_test.js
