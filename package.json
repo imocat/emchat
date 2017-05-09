@@ -1,10 +1,10 @@
 {
   "name": "ecchat",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "emchat.js",
   "scripts": {
-    
+
   },
   "keywords": [],
   "author": "imocat@qq.com",

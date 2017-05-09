@@ -1,7 +1,7 @@
 var superAgent = require('superAgent');
 var util = require('util');
 
-module.exports = function (orgName, appName, clientId, clientSecret, accessToken) {
+module.exports = function(orgName, appName, clientId, clientSecret, accessToken) {
 
 	var that = this;
 
@@ -21,13 +21,13 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 
 	/*----------  网络请求  ----------*/
 
-	this.getApiPathUrl = function (path) {
+	this.getApiPathUrl = function(path) {
 		path = path ? path : '';
 		path = path.substr(0, 1) === '/' ? path : '/' + path;
 		return util.format('%s/%s/%s%s', this.apiUrl, this.orgName, this.appName, path);
 	};
 
-	this.setApiHeaders = function (headers) {
+	this.setApiHeaders = function(headers) {
 
 		headers = headers ? headers : {};
 
@@ -46,12 +46,12 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 		return headers;
 	};
 
-	this.request = function (request, data, callback) {
+	this.request = function(request, data, callback) {
 
 		return request
 			.set(this.setApiHeaders())
 			.send(data)
-			.end(function (err, res) {
+			.end(function(err, res) {
 				if (!err) {
 					callback && callback(0, res.body);
 				} else {
@@ -60,28 +60,28 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 			});
 	};
 
-	this.get = function (path, callback) {
+	this.get = function(path, callback) {
 
 		var url = this.getApiPathUrl(path);
 		return this.request(superAgent.get(url), {}, callback);
 
 	};
 
-	this.post = function (path, data, callback) {
+	this.post = function(path, data, callback) {
 
 		var url = this.getApiPathUrl(path);
 		return this.request(superAgent.post(url), data, callback);
 
 	};
 
-	this.put = function (path, data, callback) {
+	this.put = function(path, data, callback) {
 
 		var url = this.getApiPathUrl(path);
 		return this.request(superAgent.put(url), data, callback);
 
 	};
 
-	this.del = function (path, callback) {
+	this.del = function(path, callback) {
 
 		var url = this.getApiPathUrl(path);
 		return this.request(superAgent.del(url, {}, callback));
@@ -95,7 +95,7 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.getToken = function (callback) {
+	this.api.getToken = function(callback) {
 
 		if (that.accessToken !== '') {
 			return callback && callback(0);
@@ -107,7 +107,7 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 			'grant_type': 'client_credentials',
 			'client_id': that.clientId,
 			'client_secret': that.clientSecret
-		}, function (err, res) {
+		}, function(err, res) {
 
 			if (!err) {
 				this.accessToken = res.access_token;
@@ -129,8 +129,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.createUser = function (username, password, callback) {
-		return this.getToken(function () {
+	this.api.createUser = function(username, password, callback) {
+		return this.getToken(function() {
 
 			var data = {
 				username: username,
@@ -148,9 +148,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.createUsers = function (users, callback) {
+	this.api.createUsers = function(users, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 			this.post('/users', users, callback);
 		});
 
@@ -165,9 +165,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.updatePassword = function (username, oldPassword, newPassword, callback) {
+	this.api.updatePassword = function(username, oldPassword, newPassword, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 
 			var data = {
 				oldpassword: oldPassword,
@@ -185,9 +185,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.getUser = function (username, callback) {
+	this.api.getUser = function(username, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 			this.get('/users/' + username, callback);
 		});
 
@@ -199,9 +199,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.getUsers = function (limit, callback) {
+	this.api.getUsers = function(limit, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 			that.get('/users?limit=' + limit, callback);
 		});
 
@@ -213,9 +213,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.deleteUser = function (username, callback) {
+	this.api.deleteUser = function(username, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 			this.del('/users/' + username, callback);
 		});
 
@@ -227,9 +227,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.deleteUsers = function (limit, callback) {
+	this.api.deleteUsers = function(limit, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 			this.del('/users?limit=' + limit, callback);
 		});
 
@@ -242,9 +242,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.updateNickname = function (username, nickname, callback) {
+	this.api.updateNickname = function(username, nickname, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 			var data = {
 				nickname: nickname
 			};
@@ -260,9 +260,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param {Function}
 	 * @return {void}
 	 */
-	this.api.addFriend = function (username, friendname, callback) {
+	this.api.addFriend = function(username, friendname, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 			this.post('/users/' + username + '/contacts/users/' + friendname, data, callback);
 		});
 
@@ -275,8 +275,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.deleteFriend = function (username, friendname, callback) {
-		return this.getToken(function () {
+	this.api.deleteFriend = function(username, friendname, callback) {
+		return this.getToken(function() {
 			this.del('/users/' + username + '/contacts/users/' + friendname, callback);
 		});
 	};
@@ -287,8 +287,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.getFriends = function (username, callback) {
-		return this.getToken(function () {
+	this.api.getFriends = function(username, callback) {
+		return this.getToken(function() {
 			this.get('/users/' + username + '/contacts/users', callback);
 		});
 	};
@@ -299,8 +299,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.getBlacklist = function (username, callback) {
-		return this.getToken(function () {
+	this.api.getBlacklist = function(username, callback) {
+		return this.getToken(function() {
 			this.get('/users/' + username + '/blocks/users', callback);
 		});
 	};
@@ -312,8 +312,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param {Function}
 	 * @return {void}
 	 */
-	this.api.addUserForBlacklist = function (username, users, callback) {
-		return this.getToken(function () {
+	this.api.addUserForBlacklist = function(username, users, callback) {
+		return this.getToken(function() {
 			var data = {
 				usernames: users
 			};
@@ -328,8 +328,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.deleteUserFromBlacklist = function (username, blackuser, callback) {
-		return this.getToken(function () {
+	this.api.deleteUserFromBlacklist = function(username, blackuser, callback) {
+		return this.getToken(function() {
 			this.del('/users/' + username + '/blocks/users/' + blackuser, callback);
 		});
 	};
@@ -340,8 +340,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.isOnline = function (username, callback) {
-		return this.getToken(function () {
+	this.api.isOnline = function(username, callback) {
+		return this.getToken(function() {
 			this.get('/users/' + username + '/status', callback);
 		});
 	};
@@ -352,8 +352,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.getOfflineMessuperAgentges = function (username, callback) {
-		return this.getToken(function () {
+	this.api.getOfflineMessuperAgentges = function(username, callback) {
+		return this.getToken(function() {
 			this.post('/users/' + username + '/offline_msg_count', data, callback);
 		});
 	};
@@ -366,8 +366,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.getOfflineMessageStatus = function (username, msgid, callback) {
-		return this.getToken(function () {
+	this.getOfflineMessageStatus = function(username, msgid, callback) {
+		return this.getToken(function() {
 			this.get('/users/' + username + '/offline_msg_status/' + msgid, data, callback);
 		});
 	};
@@ -378,8 +378,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.deactiveUser = function (username, callback) {
-		return this.getToken(function () {
+	this.api.deactiveUser = function(username, callback) {
+		return this.getToken(function() {
 			this.post('/users/' + username + '/deactivate', data, callback);
 		});
 
@@ -391,8 +391,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.activeUser = function (username, callback) {
-		return this.getToken(function () {
+	this.api.activeUser = function(username, callback) {
+		return this.getToken(function() {
 			this.post('/users/' + username + '/activate', data, callback);
 		});
 	};
@@ -403,8 +403,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.disconnectUser = function (username, callback) {
-		return this.getToken(function () {
+	this.api.disconnectUser = function(username, callback) {
+		return this.getToken(function() {
 			this.post('/users/' + username + '/disconnect', data, callback);
 		});
 	};
@@ -421,8 +421,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.sendText = function (type, from, target, content, ext, callback) {
-		return this.getToken(function () {
+	this.api.sendText = function(type, from, target, content, ext, callback) {
+		return this.getToken(function() {
 
 			if (!util.isArray(target)) {
 				target = [target];
@@ -455,9 +455,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.sendImage = function (type, from, target, filename, fileUrl, secret, ext, callback) {
+	this.api.sendImage = function(type, from, target, filename, fileUrl, secret, ext, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 
 			if (!util.isArray(target)) {
 				target = [target];
@@ -497,9 +497,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.sendAudio = function (type, from, target, filename, fileUrl, secret, length, ext, callback) {
+	this.api.sendAudio = function(type, from, target, filename, fileUrl, secret, length, ext, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 
 			if (!util.isArray(target)) {
 				target = [target];
@@ -554,8 +554,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.sendVedio = function (type, from, target, filename, fileUrl, fileLength, thumb, thumbFileLength, thumbSecret, secret, ext, callback) {
-		return this.getToken(function () {
+	this.api.sendVedio = function(type, from, target, filename, fileUrl, fileLength, thumb, thumbFileLength, thumbSecret, secret, ext, callback) {
+		return this.getToken(function() {
 
 			if (!util.isArray(target)) {
 				target = [target];
@@ -592,9 +592,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.sendCmd = function (type, from, target, action, ext, callback) {
+	this.api.sendCmd = function(type, from, target, action, ext, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 
 			if (!util.isArray(target)) {
 				target = [target];
@@ -624,9 +624,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.getGroups = function (limit, callback) {
+	this.api.getGroups = function(limit, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 			this.get('/chatgroups?limit=' + limit, callback);
 		});
 
@@ -638,8 +638,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.getGroupDetail = function (groupIds, callback) {
-		return this.getToken(function () {
+	this.api.getGroupDetail = function(groupIds, callback) {
+		return this.getToken(function() {
 			this.get('/chatgroups/' + groupIds, callback);
 		});
 	};
@@ -656,9 +656,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.createGroup = function (groupName, desc, isPublic, maxUsers, approval, owner, members, callback) {
+	this.api.createGroup = function(groupName, desc, isPublic, maxUsers, approval, owner, members, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 
 			var data = {
 				groupname: groupName,
@@ -685,9 +685,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.updateGroup = function (groupId, groupName, description, maxUsers, callback) {
+	this.api.updateGroup = function(groupId, groupName, description, maxUsers, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 
 			var data = {
 				groupname: groupId,
@@ -706,8 +706,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.deleteGroup = function (groupId, callback) {
-		return this.getToken(function () {
+	this.api.deleteGroup = function(groupId, callback) {
+		return this.getToken(function() {
 			this.del('/chatgroups/' + groupId, callback);
 		});
 	};
@@ -718,8 +718,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.getGroupUsers = function (groupId, callback) {
-		return this.getToken(function () {
+	this.api.getGroupUsers = function(groupId, callback) {
+		return this.getToken(function() {
 			this.get('/chatgroups/' + groupId + '/users', callback);
 		});
 	};
@@ -730,8 +730,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param {string} 被加入的成员用户名
 	 * @param {Function}
 	 */
-	this.api.addGroupMember = function (groupId, username, callback) {
-		return this.getToken(function () {
+	this.api.addGroupMember = function(groupId, username, callback) {
+		return this.getToken(function() {
 			this.post('/chatgroups/' + groupId + '/users/' + username, data, callback);
 		});
 	};
@@ -742,8 +742,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param {array} 要加入的成员
 	 * @param {Function}
 	 */
-	this.api.addGroupMembers = function (groupId, users, callback) {
-		return this.getToken(function () {
+	this.api.addGroupMembers = function(groupId, users, callback) {
+		return this.getToken(function() {
 
 			var data = {
 				usernames: users
@@ -760,8 +760,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.deleteGroupMember = function (groupId, username, callback) {
-		return this.getToken(function () {
+	this.api.deleteGroupMember = function(groupId, username, callback) {
+		return this.getToken(function() {
 			this.del('/chatgroups/' + groupId + '/users/' + username, callback);
 		});
 	};
@@ -772,8 +772,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.getGroupsForUser = function (username, callback) {
-		return this.getToken(function () {
+	this.api.getGroupsForUser = function(username, callback) {
+		return this.getToken(function() {
 			this.get('/users/' + username + '/joined_chatgroups', callback);
 		});
 	};
@@ -785,9 +785,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.changeGroupOwner = function (groupId, newOwner, callback) {
+	this.api.changeGroupOwner = function(groupId, newOwner, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 			var data = {
 				newowner: newOwner,
 			};
@@ -802,8 +802,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.getGroupBlackList = function (groupId, callback) {
-		return this.getToken(function () {
+	this.api.getGroupBlackList = function(groupId, callback) {
+		return this.getToken(function() {
 			this.get('/chatgroups/' + groupId + '/blocks/users', callback);
 		});
 	};
@@ -815,8 +815,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param {Function}
 	 * @return {void}
 	 */
-	this.api.addGroupBlackMember = function (groupId, username, callback) {
-		return this.getToken(function () {
+	this.api.addGroupBlackMember = function(groupId, username, callback) {
+		return this.getToken(function() {
 			this.post('/chatgroups/' + groupId + '/blocks/users/' + username, data, callback);
 		});
 	};
@@ -828,8 +828,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.deleteGroupBlackMember = function (groupId, username, callback) {
-		return this.getToken(function () {
+	this.deleteGroupBlackMember = function(groupId, username, callback) {
+		return this.getToken(function() {
 			this.del('/chatgroups/' + groupId + '/blocks/users/' + username, callback);
 		});
 	};
@@ -842,9 +842,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.downloadFile = function (uuid, callback) {
+	this.api.downloadFile = function(uuid, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 			this.get('/chatfiles/' + uuid, callback);
 		});
 
@@ -868,8 +868,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.getChatRecord = function (ql, limit, cursor, callback) {
-		return this.getToken(function () {
+	this.api.getChatRecord = function(ql, limit, cursor, callback) {
+		return this.getToken(function() {
 			this.get('/chatmessuperAgentges?ql=' + ql + '&limit=' + limit + '&cursor=' + cursor, callback);
 		});
 	};
@@ -887,8 +887,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.createChatRoom = function (name, description, maxUsers, owner, members, callback) {
-		return this.getToken(function () {
+	this.api.createChatRoom = function(name, description, maxUsers, owner, members, callback) {
+		return this.getToken(function() {
 
 			var data = {
 				name: name,
@@ -911,9 +911,9 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.updateChatRoom = function (chatRoomId, name, description, maxUsers, callback) {
+	this.api.updateChatRoom = function(chatRoomId, name, description, maxUsers, callback) {
 
-		return this.getToken(function () {
+		return this.getToken(function() {
 
 			var data = {
 				name: name,
@@ -932,8 +932,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.deleteChatRoom = function (chatRoomId, callback) {
-		return this.getToken(function () {
+	this.api.deleteChatRoom = function(chatRoomId, callback) {
+		return this.getToken(function() {
 			this.del('/chatrooms/' + chatRoomId, callback);
 		});
 	};
@@ -943,8 +943,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.getChatRooms = function (callback) {
-		return this.getToken(function () {
+	this.api.getChatRooms = function(callback) {
+		return this.getToken(function() {
 			this.get('/chatrooms', callback);
 		});
 	};
@@ -955,8 +955,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.getChatRoomDetail = function (chatRoomId, callback) {
-		return this.getToken(function () {
+	this.api.getChatRoomDetail = function(chatRoomId, callback) {
+		return this.getToken(function() {
 			this.get('/chatrooms/' + chatRoomId, callback);
 		});
 	};
@@ -967,8 +967,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.getChatRoomJoined = function (username, callback) {
-		return this.getToken(function () {
+	this.api.getChatRoomJoined = function(username, callback) {
+		return this.getToken(function() {
 			this.get('/users/' + username + '/joined_chatrooms', callback);
 		});
 	};
@@ -980,8 +980,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param {Function}
 	 * @return {void}
 	 */
-	this.api.addChatRoomMember = function (chatRoomId, username, callback) {
-		return this.getToken(function () {
+	this.api.addChatRoomMember = function(chatRoomId, username, callback) {
+		return this.getToken(function() {
 			this.post('/chatrooms/' + chatRoomId + '/users/' + username, data, callback);
 		});
 	};
@@ -993,8 +993,8 @@ module.exports = function (orgName, appName, clientId, clientSecret, accessToken
 	 * @param  {Function}
 	 * @return {void}
 	 */
-	this.api.deleteChatRoomMember = function (chatRoomId, username, callback) {
-		return this.getToken(function () {
+	this.api.deleteChatRoomMember = function(chatRoomId, username, callback) {
+		return this.getToken(function() {
 			this.del('/chatrooms/' + chatRoomId + '/users/' + username, callback);
 		});
 	};

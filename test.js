@@ -1,5 +1,3 @@
-
-
 var orgName = 'easemob-playground';
 var appName = 'test1';
 var clientId = 'YXA6wDs-MARqEeSO0VcBzaqg5A';
@@ -7,7 +5,6 @@ var clientSecret = 'YXA6JOMWlLap_YbI_ucz77j-4-mI0JA';
 
 // 企业管理员账号: zhangjianguo
 // 企业管理员密码: zhangjianguo
-
 
 var emchat = require('./emchat')(orgName, appName, clientId, clientSecret);
 
